@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -13,10 +13,7 @@ RUN npm run build
 # Servidor Nginx para servir estáticos
 FROM nginx:alpine
 
-# Copiar build de Astro
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Configuración de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
