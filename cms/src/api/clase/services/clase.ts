@@ -1,0 +1,5 @@
+/**
+ * clase service
+ */
+
+export default () => ({});
