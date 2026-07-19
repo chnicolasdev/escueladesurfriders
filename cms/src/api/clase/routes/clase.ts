@@ -1,13 +1,7 @@
-export default {
-  routes: [
-    // {
-    //  method: 'GET',
-    //  path: '/clase',
-    //  handler: 'clase.exampleAction',
-    //  config: {
-    //    policies: [],
-    //    middlewares: [],
-    //  },
-    // },
-  ],
-};
+/**
+ * clase router
+ */
+
+import { factories } from '@strapi/strapi';
+
+export default factories.createCoreRouter('api::clase.clase');
