@@ -1,0 +1,72 @@
+# ============================================
+# GLOBAL - Node / Dependencies
+# ============================================
+node_modules/
+*/node_modules/
+.pnp
+.pnp.js
+package-lock.json
+*/package-lock.json
+yarn.lock
+*/yarn.lock
+pnpm-lock.yaml
+*/pnpm-lock.yaml
+
+# ============================================
+# GLOBAL - Build outputs
+# ============================================
+dist/
+*/dist/
+build/
+*/build/
+.out/
+*/.out/
+*.tsbuildinfo
+
+# ============================================
+# STRAPI (cms/)
+# ============================================
+cms/.tmp/
+cms/.cache/
+cms/public/uploads/
+cms/src/extensions/documentation/
+cms/database/migrations/
+cms/database/*.db
+cms/*.db
+cms/.env
+cms/.env.*
+cms/.strapi-updater.json
+
+# ============================================
+# ASTRO (frontend/)
+# ============================================
+frontend/.astro/
+frontend/.vercel/
+frontend/.netlify/
+
+# ============================================
+# GLOBAL - Environment / Secrets
+# ============================================
+.env
+.env.*
+!.env.example
+
+# ============================================
+# GLOBAL - Logs
+# ============================================
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ============================================
+# GLOBAL - Editor / OS
+# ============================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
