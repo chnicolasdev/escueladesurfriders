@@ -1,5 +1,23 @@
 ---
-import { getClases, getStrapiImageUrl } from '../lib/strapi.js';
+// frontend/src/pages/clases.astro
+const STRAPI_URL = 'http://localhost:1337';
+
+async function getClases() {
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/clases?populate=*`);
+    if (!res.ok) throw new Error('Error');
+    const data = await res.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Error:', error);
+    return [];
+  }
+}
+
+function getImageUrl(imageData) {
+  if (!imageData || !imageData.attributes) return '';
+  return `${STRAPI_URL}${imageData.attributes.url}`;
+}
 
 const clases = await getClases();
 ---
@@ -11,24 +29,69 @@ const clases = await getClases();
     <title>Clases de Surf | Escuela de Surf</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-      .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-      h1 { text-align: center; margin-bottom: 3rem; color: white; font-size: 3rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
-      .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transition: all 0.3s ease; }
-      .card:hover { transform: translateY(-10px); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-      .card img { width: 100%; height: 240px; object-fit: cover; }
+      body { 
+        font-family: 'Segoe UI', system-ui, sans-serif; 
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        min-height: 100vh; 
+        padding: 2rem;
+      }
+      .container { max-width: 1200px; margin: 0 auto; }
+      h1 { 
+        text-align: center; 
+        color: white; 
+        font-size: 3rem; 
+        margin-bottom: 3rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      }
+      .grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+        gap: 2rem; 
+      }
+      .card { 
+        background: white; 
+        border-radius: 20px; 
+        overflow: hidden; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
+        transition: transform 0.3s;
+      }
+      .card:hover { transform: translateY(-10px); }
+      .card img { 
+        width: 100%; 
+        height: 240px; 
+        object-fit: cover; 
+        background: #e0e0e0;
+      }
       .card-content { padding: 1.8rem; }
       .card h2 { color: #2c3e50; margin-bottom: 0.5rem; font-size: 1.5rem; }
-      .nivel { display: inline-block; padding: 0.4rem 1rem; border-radius: 25px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; }
+      .nivel { 
+        display: inline-block; 
+        padding: 0.4rem 1rem; 
+        border-radius: 25px; 
+        font-size: 0.85rem; 
+        font-weight: 700; 
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
       .nivel.principiante { background: #d4edda; color: #155724; }
       .nivel.intermedio { background: #fff3cd; color: #856404; }
       .nivel.avanzado { background: #f8d7da; color: #721c24; }
       .card p { color: #666; line-height: 1.7; margin-bottom: 1.2rem; }
-      .card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1.2rem; border-top: 2px solid #f0f0f0; }
+      .card-footer { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        padding-top: 1.2rem; 
+        border-top: 2px solid #f0f0f0; 
+      }
       .precio { font-size: 1.8rem; font-weight: 800; color: #e74c3c; }
-      .duracion { color: #888; font-size: 0.95rem; display: flex; align-items: center; gap: 0.3rem; }
-      .empty { text-align: center; color: white; font-size: 1.3rem; padding: 4rem; }
+      .duracion { color: #888; font-size: 0.95rem; }
+      .empty { 
+        text-align: center; 
+        color: white; 
+        font-size: 1.3rem; 
+        padding: 4rem; 
+      }
     </style>
   </head>
   <body>
@@ -36,7 +99,10 @@ const clases = await getClases();
       <h1>🏄‍♂️ Nuestras Clases de Surf</h1>
       
       {clases.length === 0 ? (
-        <div class="empty">No hay clases disponibles en este momento 🌊</div>
+        <div class="empty">
+          No hay clases disponibles 🌊<br>
+          <small style="opacity:0.7">Crea una clase en el panel de Strapi</small>
+        </div>
       ) : (
         <div class="grid">
           {clases.map((item) => {
@@ -44,10 +110,9 @@ const clases = await getClases();
             const imagen = clase.imagen?.data;
             return (
               <div class="card">
-                <img 
-                  src={getStrapiImageUrl(imagen)} 
-                  alt={clase.titulo}
-                />
+                {imagen && (
+                  <img src={getImageUrl(imagen)} alt={clase.titulo} />
+                )}
                 <div class="card-content">
                   <span class={`nivel ${clase.nivel}`}>{clase.nivel}</span>
                   <h2>{clase.titulo}</h2>
